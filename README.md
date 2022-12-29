@@ -12,11 +12,11 @@
 
 Bitsets are fast and memory-efficient data structures for storing and retrieving information using bitwise operations.
 
-**asciiset** is an extension of the **asciiSet** data structure from the Go Standard library [source code](https://cs.opensource.google/go/go/+/master:src/bytes/bytes.go)
+**asciiset** is an extension of the **asciiSet** data structure from the Go Standard library [source code](https://cs.opensource.google/go/go/+/master:src/bytes/bytes.go).
 
 Possible applications include checking strings for prohibited ASCII characters, and counting unique ASCII characters in a string.
 
-Spot any bugs? Report them [here](https://github.com/elliotwutingfeng/asciiset/issues)
+Spot any bugs? Report them [here](https://github.com/elliotwutingfeng/asciiset/issues).
 
 ![ASCII Table](ASCII-Table.svg)
 
@@ -39,9 +39,9 @@ make tests_without_race
 
 ## Benchmarks
 
-Benchmarks comparing performance between **asciiset** and idiomatic **map[byte]struct{}** sets are provided.
+Benchmarks comparing performance between **asciiset** and **map[byte]struct{}** sets are provided.
 
-On average, compared to the **map[byte]struct{}** solution, **asciiset** has twice the element addition speed, four times the lookup speed, and 1.5 times the element removal speed.
+On average, compared to **map[byte]struct{}** sets, **asciiset** has twice the element addition speed, four times the lookup speed, and 1.5 times the element removal speed.
 
 ```sh
 make bench

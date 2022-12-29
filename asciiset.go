@@ -53,7 +53,7 @@ func (as *ASCIISet) Size() int {
 	return bits.OnesCount(uint(as[0])) + bits.OnesCount(uint(as[1])) + bits.OnesCount(uint(as[2])) + bits.OnesCount(uint(as[3]))
 }
 
-// Union returns a set containing all characters that belong to either as and as2.
+// Union returns a new set containing all characters that belong to either as and as2.
 func (as *ASCIISet) Union(as2 ASCIISet) (as3 ASCIISet) {
 	as3[0] = as[0] | as2[0]
 	as3[1] = as[1] | as2[1]
@@ -62,7 +62,7 @@ func (as *ASCIISet) Union(as2 ASCIISet) (as3 ASCIISet) {
 	return
 }
 
-// Intersection creates a new set that contain all characters that belong to both as and as2.
+// Intersection returns a new set containing all characters that belong to both as and as2.
 func (as *ASCIISet) Intersection(as2 ASCIISet) (as3 ASCIISet) {
 	as3[0] = as[0] & as2[0]
 	as3[1] = as[1] & as2[1]
@@ -71,7 +71,7 @@ func (as *ASCIISet) Intersection(as2 ASCIISet) (as3 ASCIISet) {
 	return
 }
 
-// Subtract creates a new set that contain all characters that belong to as but not as2.
+// Subtract returns a new set containing all characters that belong to as but not as2.
 func (as *ASCIISet) Subtract(as2 ASCIISet) (as3 ASCIISet) {
 	as3[0] = as[0] &^ as2[0]
 	as3[1] = as[1] &^ as2[1]
@@ -80,7 +80,7 @@ func (as *ASCIISet) Subtract(as2 ASCIISet) (as3 ASCIISet) {
 	return
 }
 
-// Equals returns whether as contains the same characters as as2.
+// Equals reports whether as contains the same characters as as2.
 func (as *ASCIISet) Equals(as2 ASCIISet) bool {
 	return as[0] == as2[0] && as[1] == as2[1] && as[2] == as2[2] && as[3] == as2[3]
 }
