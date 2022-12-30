@@ -9,14 +9,52 @@ import (
 var globalExists bool
 var globalSize int
 
-func BenchmarkASCIISet(b *testing.B) {
+// Number of sets
+const N int = 10
+
+// setupASCIISets returns an ASCIISet slice of size n where
+// each ASCIISet is empty
+//
+// if populate is true, fill each set with every 2nd ASCII character
+func setupASCIISets(n int, populate bool) []ASCIISet {
 	sets := []ASCIISet{}
-	for i := 0; i < 100000; i++ {
+	for i := 0; i < n; i++ {
 		var as ASCIISet
+		if populate {
+			for c := 0; c < utf8.RuneSelf; c += 2 {
+				// add every 2nd ASCII character
+				as.Add(byte(c))
+			}
+		}
 		sets = append(sets, as)
 	}
+	return sets
+}
+
+// setupMapSets returns a map[byte]struct{} slice of size n where
+// each map[byte]struct{} is empty
+//
+// if populate is true, fill each set with every 2nd ASCII character
+func setupMapSets(n int, populate bool) []map[byte]struct{} {
+	sets := []map[byte]struct{}{}
+	for i := 0; i < n; i++ {
+		as := make(map[byte]struct{})
+		if populate {
+			for c := 0; c < utf8.RuneSelf; c += 2 {
+				// add every 2nd ASCII character
+				as[byte(c)] = struct{}{}
+			}
+		}
+		sets = append(sets, as)
+	}
+	return sets
+}
+
+func BenchmarkASCIISet(b *testing.B) {
 	b.Run("ASCIISet Add()", func(b *testing.B) {
+		sets := setupASCIISets(N, false)
 		var c byte
+		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
 			for _, as := range sets {
 				for c = 0; c < utf8.RuneSelf; c += 2 {
@@ -27,8 +65,10 @@ func BenchmarkASCIISet(b *testing.B) {
 		}
 	})
 	b.Run("ASCIISet Contains()", func(b *testing.B) {
+		sets := setupASCIISets(N, true)
 		var exists bool
 		var c byte
+		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
 			for _, as := range sets {
 				for c = 0; c < utf8.RuneSelf; c++ {
@@ -39,7 +79,9 @@ func BenchmarkASCIISet(b *testing.B) {
 		globalExists = exists
 	})
 	b.Run("ASCIISet Remove()", func(b *testing.B) {
+		sets := setupASCIISets(N, true)
 		var c byte
+		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
 			for _, as := range sets {
 				for c = 0; c < utf8.RuneSelf; c++ {
@@ -49,8 +91,10 @@ func BenchmarkASCIISet(b *testing.B) {
 		}
 	})
 	b.Run("ASCIISet Size()", func(b *testing.B) {
-		var c byte
+		sets := setupASCIISets(N, true)
 		var size int
+		var c byte
+		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
 			for _, as := range sets {
 				for c = 0; c < utf8.RuneSelf; c++ {
@@ -63,12 +107,10 @@ func BenchmarkASCIISet(b *testing.B) {
 }
 
 func BenchmarkMapSet(b *testing.B) {
-	sets := []map[byte]struct{}{}
-	for i := 0; i < 100000; i++ {
-		sets = append(sets, make(map[byte]struct{}))
-	}
-	b.Run("map Add()", func(b *testing.B) {
+	b.Run("map Add", func(b *testing.B) {
+		sets := setupMapSets(N, false)
 		var c byte
+		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
 			for _, as := range sets {
 				for c = 0; c < utf8.RuneSelf; c += 2 {
@@ -78,9 +120,11 @@ func BenchmarkMapSet(b *testing.B) {
 			}
 		}
 	})
-	b.Run("map Contains()", func(b *testing.B) {
+	b.Run("map Contains", func(b *testing.B) {
+		sets := setupMapSets(N, true)
 		var exists bool
 		var c byte
+		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
 			for _, as := range sets {
 				for c = 0; c < utf8.RuneSelf; c++ {
@@ -90,8 +134,10 @@ func BenchmarkMapSet(b *testing.B) {
 		}
 		globalExists = exists
 	})
-	b.Run("map Remove()", func(b *testing.B) {
+	b.Run("map Remove", func(b *testing.B) {
+		sets := setupMapSets(N, true)
 		var c byte
+		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
 			for _, as := range sets {
 				for c = 0; c < utf8.RuneSelf; c++ {
@@ -100,9 +146,11 @@ func BenchmarkMapSet(b *testing.B) {
 			}
 		}
 	})
-	b.Run("map Size()", func(b *testing.B) {
+	b.Run("map Size", func(b *testing.B) {
+		sets := setupMapSets(N, true)
 		var c byte
 		var size int
+		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
 			for _, as := range sets {
 				for c = 0; c < utf8.RuneSelf; c++ {
