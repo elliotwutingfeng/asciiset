@@ -41,7 +41,7 @@ make tests_without_race
 
 Benchmarks comparing performance between **asciiset** and **map[byte]struct{}** sets are provided.
 
-On average, compared to **map[byte]struct{}** sets, **asciiset** has twice the element addition speed, four times the lookup speed, and 1.5 times the element removal speed.
+On average, compared to **map[byte]struct{}** sets, **asciiset** has 18 times the element addition speed, 40 times the lookup speed, and 1.5 times the element removal speed.
 
 ```sh
 make bench
