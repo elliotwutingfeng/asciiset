@@ -1,6 +1,7 @@
 package asciiset
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -103,5 +104,40 @@ func TestEquals(t *testing.T) {
 	as2, _ := MakeASCIISet("ABCD")
 	if !as.Equals(as2) {
 		t.Errorf("as should be equal to as2")
+	}
+}
+
+func TestVisit(t *testing.T) {
+	// chars must be all unique and in ascending order
+	chars := "123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	as, _ := MakeASCIISet(chars)
+
+	// scenario: visit every character in the set
+	output := make([]byte, 0, len(chars))
+	as.Visit(func(n byte) bool {
+		output = append(output, n)
+		return false
+	})
+	if len(output) != len(chars) {
+		t.Errorf("output length must be %d; visit every character. Got %d", len(chars), len(output))
+	}
+	for i := 0; i < len(chars); i++ {
+		if output[i] != byte(chars[i]) {
+			t.Errorf("%d %d", output[i], byte(chars[i]))
+		}
+	}
+	// scenario: stop early at 'T'
+	output = make([]byte, 0, strings.Index(chars, "T")+1)
+	as.Visit(func(n byte) bool {
+		output = append(output, n)
+		return n == 'T'
+	})
+	if len(output) != strings.Index(chars, "T")+1 {
+		t.Errorf("output length must be %d; stop early at 'T'. Got %d", strings.Index(chars, "T")+1, len(output))
+	}
+	for i := 0; i < strings.Index(chars, "T")+1; i++ {
+		if output[i] != byte(chars[i]) {
+			t.Errorf("%d %d", output[i], byte(chars[i]))
+		}
 	}
 }
