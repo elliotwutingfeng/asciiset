@@ -1,13 +1,17 @@
-package asciiset
+package asciiset_test
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/elliotwutingfeng/asciiset"
+)
 
 // Basic asciiset operations
 func Example_basics() {
 	// Making an ASCIISet
 	// No need to ensure that all characters in chars are unique
 	chars := "3gqZ1mAhVcA#Z7eKvwPN8J@D"
-	as, ok := MakeASCIISet(chars)
+	as, ok := asciiset.MakeASCIISet(chars)
 	if ok {
 		fmt.Println("as created")
 	}
@@ -59,12 +63,12 @@ func Example_basics() {
 
 // Operations involving multiple sets
 func Example_multiple_sets() {
-	as, _ := MakeASCIISet("ABCD")
-	as2, _ := MakeASCIISet("CDEF")
+	as, _ := asciiset.MakeASCIISet("ABCD")
+	as2, _ := asciiset.MakeASCIISet("CDEF")
 
-	expectedUnion, _ := MakeASCIISet("ABCDEF")
-	expectedIntersection, _ := MakeASCIISet("CD")
-	expectedSubtract, _ := MakeASCIISet("AB")
+	expectedUnion, _ := asciiset.MakeASCIISet("ABCDEF")
+	expectedIntersection, _ := asciiset.MakeASCIISet("CD")
+	expectedSubtract, _ := asciiset.MakeASCIISet("AB")
 
 	union := as.Union(as2)
 	if union.Equals(expectedUnion) {
@@ -78,7 +82,24 @@ func Example_multiple_sets() {
 	if subtract.Equals(expectedSubtract) {
 		fmt.Println(`Subtraction of as2 from as is "AB"`)
 	}
+	fmt.Printf("Content of as is \"")
+	as.Visit(func(n byte) bool {
+		fmt.Printf("%c", n)
+		return false
+	})
+	fmt.Println(`"`)
+	fmt.Printf(`Content of as2 up to character 'E' is "`)
+	as2.Visit(func(n byte) bool {
+		fmt.Printf("%c", n)
+		if n == 'E' {
+			return true
+		}
+		return false
+	})
+	fmt.Println(`"`)
 	// Output: Union of as and as2 is "ABCDEF"
 	// Intersection of as and as2 is "CD"
 	// Subtraction of as2 from as is "AB"
+	// Content of as is "ABCD"
+	// Content of as2 up to character 'E' is "CDE"
 }
