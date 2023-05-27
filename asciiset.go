@@ -2,19 +2,19 @@
 package asciiset
 
 import (
-	"math/bits"
 	"unicode/utf8"
 )
 
-// ASCIISet is a 32-byte value, where each bit represents the presence of a
-// given ASCII character in the set. The 128-bits of the lower 16 bytes,
-// starting with the least-significant bit of the lowest word to the
-// most-significant bit of the highest word, map to the full range of all
-// 128 ASCII characters. The 128-bits of the upper 16 bytes will be zeroed,
+// ASCIISet is a 36-byte value, where each bit in the first 32-bytes
+// represents the presence of a given ASCII character in the set.
+// The remaining 4-bytes is a counter for the number of ASCII characters in the set.
+// The 128-bits of the first 16 bytes, starting with the least-significant bit
+// of the lowest word to the most-significant bit of the highest word,
+// map to the full range of all 128 ASCII characters.
+// The 128-bits of the next 16 bytes will be zeroed,
 // ensuring that any non-ASCII character will be reported as not in the set.
-// This allocates a total of 32 bytes even though the upper half
-// is unused to avoid bounds checks in ASCIISet.Contains.
-type ASCIISet [8]uint32
+// Rejecting non-ASCII characters in this way avoids bounds checks in ASCIISet.Contains.
+type ASCIISet [9]uint32
 
 // MakeASCIISet creates a set of ASCII characters and reports whether all
 // characters in chars are ASCII.
@@ -24,7 +24,7 @@ func MakeASCIISet(chars string) (as ASCIISet, ok bool) {
 		if c >= utf8.RuneSelf {
 			return as, false
 		}
-		as[c/32] |= 1 << (c % 32)
+		as.Add(c)
 	}
 	return as, true
 }
@@ -32,7 +32,11 @@ func MakeASCIISet(chars string) (as ASCIISet, ok bool) {
 // Add inserts character c into the set.
 func (as *ASCIISet) Add(c byte) {
 	if c < utf8.RuneSelf { // ensure that c is an ASCII byte
+		before := as[c/32]
 		as[c/32] |= 1 << (c % 32)
+		if before != as[c/32] {
+			as[8]++
+		}
 	}
 }
 
@@ -45,12 +49,18 @@ func (as *ASCIISet) Contains(c byte) bool {
 //
 // if c is not in the set, the set contents will remain unchanged.
 func (as *ASCIISet) Remove(c byte) {
-	as[c/32] &= ^(1 << (c % 32))
+	if c < utf8.RuneSelf { // ensure that c is an ASCII byte
+		before := as[c/32]
+		as[c/32] &= ^(1 << (c % 32))
+		if before != as[c/32] {
+			as[8]--
+		}
+	}
 }
 
 // Size returns the number of characters in the set.
 func (as *ASCIISet) Size() int {
-	return bits.OnesCount(uint(as[0])) + bits.OnesCount(uint(as[1])) + bits.OnesCount(uint(as[2])) + bits.OnesCount(uint(as[3]))
+	return int(as[8])
 }
 
 // Union returns a new set containing all characters that belong to either as and as2.
