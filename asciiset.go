@@ -97,7 +97,7 @@ func (as *ASCIISet) Equals(as2 ASCIISet) bool {
 
 // Visit calls the do function for each character of as in ascending numerical order.
 // If do returns true, Visit returns immediately, skipping any remaining
-// characters, and returns true. It is safe for do to add or delete
+// characters, and returns true. It is safe for do to Add or Remove
 // characters. The behavior of Visit is undefined if do changes
 // the set in any other way.
 func (as *ASCIISet) Visit(do func(n byte) (skip bool)) (aborted bool) {

@@ -115,7 +115,9 @@ func TestVisit(t *testing.T) {
 	// scenario: visit every character in the set
 	output := make([]byte, 0, len(chars))
 	as.Visit(func(n byte) bool {
-		output = append(output, n)
+		if as.Contains(n) {
+			output = append(output, n)
+		}
 		return false
 	})
 	if len(output) != len(chars) {
@@ -129,13 +131,55 @@ func TestVisit(t *testing.T) {
 	// scenario: stop early at 'T'
 	output = make([]byte, 0, strings.Index(chars, "T")+1)
 	as.Visit(func(n byte) bool {
-		output = append(output, n)
+		if as.Contains(n) {
+			output = append(output, n)
+		}
 		return n == 'T'
 	})
 	if len(output) != strings.Index(chars, "T")+1 {
 		t.Errorf("output length must be %d; stop early at 'T'. Got %d", strings.Index(chars, "T")+1, len(output))
 	}
 	for i := 0; i < strings.Index(chars, "T")+1; i++ {
+		if output[i] != byte(chars[i]) {
+			t.Errorf("%d %d", output[i], byte(chars[i]))
+		}
+	}
+	// scenario: Add extra '\n'
+	output = make([]byte, 0, len(chars))
+	as.Visit(func(n byte) bool {
+		as.Add('\n')
+		if as.Contains(n) {
+			output = append(output, n)
+		}
+		return false
+	})
+	if as.Size() != len(chars)+1 {
+		t.Errorf("as.Size() must be %d; visit every character and add extra '\n'. Got %d", len(chars)+1, as.Size())
+	}
+	if len(output) != len(chars) {
+		t.Errorf("output length must be %d; visit every character and add extra '\n'. Got %d", len(chars), len(output))
+	}
+	for i := 0; i < len(chars); i++ {
+		if output[i] != byte(chars[i]) {
+			t.Errorf("%d %d", output[i], byte(chars[i]))
+		}
+	}
+	// scenario: Remove extra '\n'
+	output = make([]byte, 0, len(chars))
+	as.Visit(func(n byte) bool {
+		as.Remove('\n')
+		if as.Contains(n) {
+			output = append(output, n)
+		}
+		return false
+	})
+	if as.Size() != len(chars) {
+		t.Errorf("as.Size() must be %d; visit every character and remove extra '\n'. Got %d", len(chars), as.Size())
+	}
+	if len(output) != len(chars) {
+		t.Errorf("output length must be %d; visit every character and remove extra '\n'. Got %d", len(chars), len(output))
+	}
+	for i := 0; i < len(chars); i++ {
 		if output[i] != byte(chars[i]) {
 			t.Errorf("%d %d", output[i], byte(chars[i]))
 		}
