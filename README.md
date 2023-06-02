@@ -39,15 +39,40 @@ make tests_without_race
 
 ## Benchmarks
 
-Benchmarks comparing performance between **asciiset** and **map[byte]struct{}** sets are provided.
-
-On average, compared to **map[byte]struct{}** sets, **asciiset** has 11 times the element addition speed, 29 times the element lookup speed, 1.5 times the element removal speed, and equivalent set length lookup speed.
-
 ```bash
 make bench
 ```
 
 ### Results
+
+```text
+CPU: AMD Ryzen 7 5800X
+Time in nanoseconds (ns) | Lower is better
+
+ASCIISet
+
+     Add() ▏  891 🟦🟦🟦 11x faster
+
+Contains() ▏  580 🟦🟦 28x faster
+
+  Remove() ▏ 1570 🟦🟦🟦🟦 1.5x faster
+
+    Size() ▏  313 🟦 equivalent
+
+   Visit() ▏ 1421 🟦🟦🟦🟦 3.5x faster
+
+map[byte]struct{}
+
+     Add() ▏ 9850 🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥
+
+Contains() ▏16605 🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥
+
+  Remove() ▏ 2510 🟥🟥🟥🟥🟥🟥
+
+    Size() ▏  318 🟥
+
+   Visit() ▏ 5085 🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥
+```
 
 ```bash
 go test -bench . -benchmem -cpu 1
@@ -55,14 +80,16 @@ goos: linux
 goarch: amd64
 pkg: github.com/elliotwutingfeng/asciiset
 cpu: AMD Ryzen 7 5800X 8-Core Processor
-BenchmarkASCIISet/ASCIISet_Add()                 1388647               869.9 ns/op             0 B/op          0 allocs/op
-BenchmarkASCIISet/ASCIISet_Contains()            2038735               586.0 ns/op             0 B/op          0 allocs/op
-BenchmarkASCIISet/ASCIISet_Remove()               742290              1624 ns/op               0 B/op          0 allocs/op
-BenchmarkASCIISet/ASCIISet_Size()                3744616               319.9 ns/op             0 B/op          0 allocs/op
-BenchmarkMapSet/map_Add                           121694              9998 ns/op               0 B/op          0 allocs/op
-BenchmarkMapSet/map_Contains                       69081             17179 ns/op               0 B/op          0 allocs/op
-BenchmarkMapSet/map_Remove                        468333              2561 ns/op               0 B/op          0 allocs/op
-BenchmarkMapSet/map_Size                         3440536               337.4 ns/op             0 B/op          0 allocs/op
+BenchmarkASCIISet/ASCIISet_Add()                 1340958               891.8 ns/op             0 B/op          0 allocs/op
+BenchmarkASCIISet/ASCIISet_Contains()            2058140               580.9 ns/op             0 B/op          0 allocs/op
+BenchmarkASCIISet/ASCIISet_Remove()               762636              1570 ns/op               0 B/op          0 allocs/op
+BenchmarkASCIISet/ASCIISet_Size()                3808866               313.2 ns/op             0 B/op          0 allocs/op
+BenchmarkASCIISet/ASCIISet_Visit()                840808              1421 ns/op               0 B/op          0 allocs/op
+BenchmarkMapSet/map_Add                           122043              9850 ns/op               0 B/op          0 allocs/op
+BenchmarkMapSet/map_Contains                       72583             16605 ns/op               0 B/op          0 allocs/op
+BenchmarkMapSet/map_Remove                        451785              2510 ns/op               0 B/op          0 allocs/op
+BenchmarkMapSet/map_Size                         3789381               318.3 ns/op             0 B/op          0 allocs/op
+BenchmarkMapSet/map_Visit                         235515              5085 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/elliotwutingfeng/asciiset    12.037s
+ok      github.com/elliotwutingfeng/asciiset    14.438s
 ```
