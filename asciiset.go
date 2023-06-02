@@ -51,7 +51,7 @@ func (as *ASCIISet) Contains(c byte) bool {
 func (as *ASCIISet) Remove(c byte) {
 	if c < utf8.RuneSelf { // ensure that c is an ASCII byte
 		before := as[c/32]
-		as[c/32] &= ^(1 << (c % 32))
+		as[c/32] &^= 1 << (c % 32)
 		if before != as[c/32] {
 			as[8]--
 		}
