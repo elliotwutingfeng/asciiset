@@ -17,7 +17,7 @@ jobs:
       run: make tests
     - name: Upload coverage to Codecov (ubuntu-latest only)
       if: matrix.os == 'ubuntu-latest'
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
 
   format-markdown:
     runs-on: ubuntu-latest
