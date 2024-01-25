@@ -15,9 +15,9 @@ jobs:
         go-version-file: './go.mod'
     - name: Test
       run: make tests
-    - name: Upload coverage to Codecov (ubuntu-latest only)
+    - name: Upload coverage to Coveralls
       if: matrix.os == 'ubuntu-latest'
-      uses: codecov/codecov-action@v3
+      uses: coverallsapp/github-action@v2
 
   format-markdown:
     runs-on: ubuntu-latest
