@@ -18,7 +18,7 @@ jobs:
     - name: Convert Go coverage to lcov
       if: matrix.os == 'ubuntu-latest'
       run: |
-        go install github.com/jandelgado/gcov2lcov@latest
+        go install github.com/jandelgado/gcov2lcov
         gcov2lcov -infile=coverage.out -outfile=coverage.lcov
     - name: Upload coverage to Coveralls
       if: matrix.os == 'ubuntu-latest'
