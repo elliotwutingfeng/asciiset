@@ -15,6 +15,10 @@ jobs:
         go-version-file: './go.mod'
     - name: Test
       run: make tests
+    - name: Convert Go coverage to lcov
+      run: |
+        go install github.com/jandelgado/gcov2lcov@latest
+        gcov2lcov -infile=coverage.out -outfile=coverage.lcov
     - name: Upload coverage to Coveralls
       if: matrix.os == 'ubuntu-latest'
       uses: coverallsapp/github-action@v2
