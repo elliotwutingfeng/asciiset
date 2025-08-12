@@ -1,5 +1,8 @@
 name: CI
 on: [push, pull_request]
+permissions:
+  contents: write
+  pull-requests: write
 jobs:
   test-and-coverage:
     strategy:
@@ -8,11 +11,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - name: Check out repository
-      uses: actions/checkout@v4
-    - name: Setup go
+      uses: actions/checkout@v5
+    - name: Setup go (not macOS)
+      if: matrix.os != 'macos-latest'
       uses: actions/setup-go@v5
       with:
         go-version-file: './go.mod'
+    - name: Setup go (macOS)
+      if: matrix.os == 'macos-latest'
+      uses: actions/setup-go@v5
+      with:
+        go-version: 'oldstable'
     - name: Test
       run: make tests
     - name: Setup go with oldstable version for lcov
@@ -34,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Format Markdown with markdownlint
         run: |
