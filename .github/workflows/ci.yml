@@ -14,19 +14,19 @@ jobs:
       uses: actions/checkout@v5
     - name: Setup go (not macOS)
       if: matrix.os != 'macos-latest'
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@v6
       with:
         go-version-file: './go.mod'
     - name: Setup go (macOS)
       if: matrix.os == 'macos-latest'
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@v6
       with:
         go-version: 'oldstable'
     - name: Test
       run: make tests
     - name: Setup go with oldstable version for lcov
       if: matrix.os == 'ubuntu-latest'
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@v6
       with:
         go-version: 'oldstable'
     - name: Convert Go coverage to lcov
