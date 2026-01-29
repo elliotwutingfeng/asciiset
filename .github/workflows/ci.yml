@@ -39,7 +39,7 @@ jobs:
       uses: coverallsapp/github-action@v2
 
   format-markdown:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
 
     steps:
       - name: Checkout
