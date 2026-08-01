@@ -1,7 +1,6 @@
 # asciiset
 
 [![Go Reference](https://img.shields.io/badge/go-reference-blue?logo=go&logoColor=white&style=for-the-badge)](https://pkg.go.dev/github.com/elliotwutingfeng/asciiset)
-[![Go Report Card](https://goreportcard.com/badge/github.com/elliotwutingfeng/asciiset?style=for-the-badge)](https://goreportcard.com/report/github.com/elliotwutingfeng/asciiset)
 [![Coveralls](https://img.shields.io/coverallsCoverage/github/elliotwutingfeng/asciiset?logo=coveralls&style=for-the-badge)](https://coveralls.io/github/elliotwutingfeng/asciiset?branch=main)
 [![License](https://img.shields.io/badge/LICENSE-BSD--3--CLAUSE-GREEN?style=for-the-badge)](LICENSE)
 
